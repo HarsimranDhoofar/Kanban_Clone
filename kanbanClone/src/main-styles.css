@@ -1,0 +1,8 @@
+@import url("htttps://fonts.googleapis.com/css?family=Nunito:400,700|Lato:400,800,900");
+html,
+body {
+  height: 100%;
+}
+html {
+  background-image: url("./assets/background.svg");
+}

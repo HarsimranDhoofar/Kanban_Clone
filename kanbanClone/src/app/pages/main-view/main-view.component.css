@@ -1,0 +1,50 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.app-name {
+  font-size: 20px;
+  font-family: "Lato", sans-serif;
+  font-weight: bold;
+}
+.has-gradient-text {
+  background: -webkit-linear-gradient(blue, green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.board {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  min-height: 0;
+}
+.board .board-bar {
+  background: rgba(128, 128, 128, 0.5);
+  padding: 8px 15px;
+}
+.board .board-bar .board-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+.board .board-wrapper {
+  display: flex;
+  flex-grow: 1;
+  overflow-x: auto;
+}
+.board .board-wrapper .board-colums {
+  display: flex;
+  flex-grow: 1;
+}
+.board .board-wrapper .board-colums .board-colums {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 300px;
+  margin: 50px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.5);
+}

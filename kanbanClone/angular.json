@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "kanbanClone"
+    }
+  },
+  "defaultProject": "kanbanClone",
+  "cli": {
+    "analytics": "9e9e6e4f-e01f-4e8e-b6ca-487dadef27b4"
+  }
 }
