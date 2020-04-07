@@ -54,6 +54,9 @@ board:Board =new Board('Test Board',[
     var name= this.board.columns.find(x => {
       x.name === getColumnName
       x.columns.push(taskname);
+      if(x.name != getColumnName){
+        x.columns.pop();
+      }
     });
   
     console.log(name);
