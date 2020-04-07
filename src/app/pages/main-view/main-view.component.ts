@@ -3,6 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import { Board } from 'src/app/models/board.model';
 import { Column } from 'src/app/models/column.model';
 import{ CrudBackendService } from '../../crud-backend.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -11,8 +12,10 @@ import{ CrudBackendService } from '../../crud-backend.service';
 export class MainViewComponent implements OnInit {
 
   constructor(public crudBackend: CrudBackendService) { }
+  boards:Board[]=[];
   boardName : any = "board Name";
-board:Board =new Board('Test Board',[
+  private boardSub: Subscription
+  board:Board =new Board('Test Board',[
   new Column('Ideas',[
           "Some random Idea",
           "This is an other Random Idea",
@@ -39,6 +42,10 @@ board:Board =new Board('Test Board',[
   ]);
 
   ngOnInit(): void {
+    this.crudBackend.getBoard();
+    this.boardSub= this.crudBackend.getBoardUpdateListener().subscribe((boards:Board[]) =>{
+      this.boards = boards
+    });
   }
   
   onCreateNewColumn(){

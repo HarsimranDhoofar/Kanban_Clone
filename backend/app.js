@@ -2,7 +2,7 @@ const express = require('express'); // express not shipped with node.js, can onl
 const bodyParser = require('body-parser');
 const app = express(); // express app is the big chain of middlewares. funnal through which we send request.
 
-const postsRoutes = require("./routes/posts")
+const boardsRoutes = require("./routes/boards")
 const mongoose = require('mongoose');
 // function in node js ()=>{}
 // app.use((req, res, next)=>{
@@ -23,11 +23,12 @@ mongoose.connect("mongodb+srv://harsimran:7XFrPuKYIfqqphjR@cluster0-e4hew.mongod
         console.log('connection Failed')
     });
 
-    app.use('/api/posts', (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "*"); // need to change this from localhost during deployment 
+    app.use('/api/boards', (req, res, next) => {
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200/"); // need to change this from localhost during deployment 
         res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS, PUT");
         next();
     });
-    app.use("/api/posts",postsRoutes);
+    app.use("/api/boards",boardsRoutes);
+    
 module.exports = app;
