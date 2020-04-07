@@ -9,7 +9,12 @@
     </div>
     <div class="board">
         <div class="board-bar">
-            <p class="board-name">Board Name</p>
+            <div class="board-name">Board Name
+                <div class="buttons are-small">
+                    <button class="button is-primary is-inverted is-outlined is-light"><i class="fa fa-edit"></i>&nbsp;Edit Board Name</button>
+                 <button class="button is-link is-inverted is-outlined is-light" (click)="onCreateNewColumn()"><i class="fa fa-plus"></i>&nbsp;Create New Column</button>
+                </div>
+            </div>   
         </div>
         <div class="board-wrapper">
             <div class="board-columns" cdkDropListGroup>

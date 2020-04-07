@@ -39,7 +39,16 @@ board:Board =new Board('Test Board',[
   ngOnInit(): void {
   }
   
-
+  onCreateNewColumn(){
+    console.log('new Column method Works');
+    this.board.columns.push( new Column('New Column',[
+      "Get up",
+      "Brush teeth",
+      "Take a shower",
+      "Check e-mail",
+      "Walk dog"
+     ]))
+  }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

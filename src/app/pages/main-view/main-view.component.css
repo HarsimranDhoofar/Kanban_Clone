@@ -9,7 +9,7 @@
   font-weight: bold;
 }
 .has-gradient-text {
-  background: -webkit-linear-gradient(blue, green);
+  background: -webkit-linear-gradient(rgb(190, 190, 255), rgb(182, 245, 182));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -23,6 +23,7 @@
 .board .board-bar {
   background: rgba(128, 128, 128, 0.5);
   padding: 8px 15px;
+
 }
 .board .board-bar .board-name {
   font-size: 20px;
