@@ -24,7 +24,7 @@ this.http.post<{message:string, postId:string}>('http://localhost:3000/api/board
 }
 
 getBoard(){
-  this.http.get<{message:string, boards:any}>('http://localhost:3000/api/posts')
+  this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards')
   .pipe(map((boardData)=>{
     return boardData.boards.map(board=>{
            return{

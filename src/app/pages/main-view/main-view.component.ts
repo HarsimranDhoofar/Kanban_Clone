@@ -4,6 +4,7 @@ import { Board } from 'src/app/models/board.model';
 import { Column } from 'src/app/models/column.model';
 import{ CrudBackendService } from '../../crud-backend.service';
 import { Subscription } from 'rxjs';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -42,9 +43,16 @@ export class MainViewComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
+    var columnNameFetched ="";
+    var columItemFetched=[];
     this.crudBackend.getBoard();
     this.boardSub= this.crudBackend.getBoardUpdateListener().subscribe((boards:Board[]) =>{
-      this.boards = boards
+      boards.find(x =>{
+       columnNameFetched = x.name;
+       columItemFetched = x.columns;
+       this.board.columns.push( new Column(columnNameFetched,columItemFetched));
+      });
+      
     });
   }
   

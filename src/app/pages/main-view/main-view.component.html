@@ -18,7 +18,7 @@
         </div>
         <div class="board-wrapper">
             <div class="board-columns" cdkDropListGroup>
-                <div class="board-column" *ngFor="let column of boards">
+                <div class="board-column" *ngFor="let column of board.columns">
                     <div class="column-title">
                         {{column.name}}
                         <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(column.name)"><i class="fa fa-plus"></i></button>

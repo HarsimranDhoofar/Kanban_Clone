@@ -23,8 +23,8 @@ mongoose.connect("mongodb+srv://harsimran:7XFrPuKYIfqqphjR@cluster0-e4hew.mongod
         console.log('connection Failed')
     });
 
-    app.use('/api/boards', (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200/"); // need to change this from localhost during deployment 
+    app.use("/api/boards", (req, res, next) => {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // need to change this from localhost during deployment 
         res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS, PUT");
         next();
