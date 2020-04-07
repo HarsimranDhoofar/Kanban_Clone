@@ -8,10 +8,10 @@
         </div>
     </div>
     <div class="board">
-        <div class="board-bar">
-            <div class="board-name">Board Name
+        <div class="board-bar" *ngIf="boardName">
+            <div class="board-name">{{boardName}}
                 <div class="buttons are-small">
-                    <button class="button is-primary is-inverted is-outlined is-light"><i class="fa fa-edit"></i>&nbsp;Edit Board Name</button>
+                    <button class="button is-primary is-inverted is-outlined is-light" (click)="onEditBoardName()"><i class="fa fa-edit"></i>&nbsp;Edit Board Name</button>
                  <button class="button is-link is-inverted is-outlined is-light" (click)="onCreateNewColumn()"><i class="fa fa-plus"></i>&nbsp;Create New Column</button>
                 </div>
             </div>   
@@ -26,8 +26,9 @@
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="column.columns" (cdkDropListDropped)="drop($event)">
                         <div class="task" *ngFor="let item of column.columns" cdkDrag>
                             {{item}}
+                            <button class="button is-small is-danger is-light" (click)="ondeleteTask(item,column.name)"><i class="fa fa-trash"></i></button>
                         </div>
-
+                        
                     </div>
                 </div>
 

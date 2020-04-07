@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board.model';
 import { Column } from 'src/app/models/column.model';
+import{ CrudBackendService } from '../../crud-backend.service';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -9,7 +10,8 @@ import { Column } from 'src/app/models/column.model';
 })
 export class MainViewComponent implements OnInit {
 
-  constructor() { }
+  constructor(public crudBackend: CrudBackendService) { }
+  boardName : any = "board Name";
 board:Board =new Board('Test Board',[
   new Column('Ideas',[
           "Some random Idea",
@@ -41,17 +43,13 @@ board:Board =new Board('Test Board',[
   
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
-    this.board.columns.push( new Column(columnName,[
-      "Get up",
-      "Brush teeth",
-      "Take a shower",
-      "Check e-mail",
-      "Walk dog"
-     ]))
+    this.board.columns.push( new Column(columnName,[]));
+    this.crudBackend.newColumn(columnName);
+    
   }
   onCreateNewTask(getColumnName: any){
     var taskname = prompt("Please enter the name of the task", "New Task");
-    var name= this.board.columns.find(x => {
+    this.board.columns.find(x => {
       x.name === getColumnName
       x.columns.push(taskname);
       if(x.name != getColumnName){
@@ -59,8 +57,25 @@ board:Board =new Board('Test Board',[
       }
     });
   
-    console.log(name);
   }
+  onEditBoardName(){
+     var getBoardName = prompt("Please enter the board Name", "New Board");
+      this.board.name = getBoardName;
+      this.boardName = getBoardName;
+      
+  }
+  ondeleteTask(item, getColumnName){
+     console.log(item);
+     console.log(getColumnName);
+     var name= this.board.columns.find(x => {
+      x.name === getColumnName
+     var number = x.columns.indexOf(item);
+     if (number > -1) {
+     x.columns.splice(number, 1);
+     }
+    });
+  }
+ 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
