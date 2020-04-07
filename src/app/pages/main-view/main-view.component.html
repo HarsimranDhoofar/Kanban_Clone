@@ -21,6 +21,7 @@
                 <div class="board-column" *ngFor="let column of board.columns">
                     <div class="column-title">
                         {{column.name}}
+                        <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(column.name)"><i class="fa fa-plus"></i></button>
                     </div>
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="column.columns" (cdkDropListDropped)="drop($event)">
                         <div class="task" *ngFor="let item of column.columns" cdkDrag>
@@ -34,3 +35,4 @@
         </div>
     </div>
 </div>
+

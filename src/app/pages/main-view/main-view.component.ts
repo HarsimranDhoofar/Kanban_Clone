@@ -40,14 +40,23 @@ board:Board =new Board('Test Board',[
   }
   
   onCreateNewColumn(){
-    console.log('new Column method Works');
-    this.board.columns.push( new Column('New Column',[
+    var columnName = prompt("Please enter the name of the column", "New Column");
+    this.board.columns.push( new Column(columnName,[
       "Get up",
       "Brush teeth",
       "Take a shower",
       "Check e-mail",
       "Walk dog"
      ]))
+  }
+  onCreateNewTask(getColumnName: any){
+    var taskname = prompt("Please enter the name of the task", "New Task");
+    var name= this.board.columns.find(x => {
+      x.name === getColumnName
+      x.columns.push(taskname);
+    });
+  
+    console.log(name);
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
