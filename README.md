@@ -14,3 +14,5 @@ Implementing nodejs backend and mongodb to store data at the backend.
 
 ## About Me
 
+Hi! My name is Harsimran Dhoofar looking for postion as developer. Can teach myself new stacks very quick.
+Checkout my [portfolio](https://harsimrandhoofar.github.io/Portfolio/)
