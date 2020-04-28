@@ -16,6 +16,20 @@ router.post('', (req, res, next) => {
 
 });
 
+router.patch('', (req, res, next) => {
+    const board = new Board({
+        name: req.body.name,
+        column: req.body.column
+    });
+    board.save().then(result => {
+        res.status(201).json({
+            message: "Post updated successfully",
+           // postId: result.id
+        });
+    });
+
+});
+
 // router.put('', (req, res, next) => {
 //     const post = new Post({
 //         name: req.body.name,

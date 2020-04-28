@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { Board } from 'src/app/models/board.model';
 import { Column } from 'src/app/models/column.model';
+import { Description } from 'src/app/models/description.model';
 import{ CrudBackendService } from '../../crud-backend.service';
 import { Subscription } from 'rxjs';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
@@ -11,84 +11,100 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
   styleUrls: ['./main-view.component.scss']
 })
 export class MainViewComponent implements OnInit {
-
+  isModalActive: boolean = false;
+  itemSeleted: String ="";
+  itemFromColumn: any;
+  column:Column[]=[];
+  history:string[]=[];
+  boardSub: Subscription
+  value: String;
   constructor(public crudBackend: CrudBackendService) { }
-  boards:Board[]=[];
-  boardName : any = "board Name";
-  private boardSub: Subscription
-  board:Board =new Board('Test Board',[
-  new Column('Ideas',[
-          "Some random Idea",
-          "This is an other Random Idea",
-          "Build an Awsome Application"
-  ]),
-   new Column('Research',[
-            "This is Research",
-            "bobobo",
-            "lol"
-  ]),
-   new Column('ToDo',[
-    "Get to work",
-    "Pick up groceries",
-    "Go home",
-    "Fall asleep"
-   ]),
-   new Column('Done',[
-    "Get up",
-    "Brush teeth",
-    "Take a shower",
-    "Check e-mail",
-    "Walk dog"
-   ])
-  ]);
-
   ngOnInit(): void {
+    this.getBoardData();
+  }
+  
+  getBoardData(){
     var columnNameFetched ="";
     var columItemFetched=[];
     this.crudBackend.getBoard();
-    this.boardSub= this.crudBackend.getBoardUpdateListener().subscribe((boards:Board[]) =>{
-      boards.find(x =>{
-       columnNameFetched = x.name;
-       columItemFetched = x.columns;
-       this.board.columns.push( new Column(columnNameFetched,columItemFetched));
-      });
+    // this.boardSub= this.crudBackend.getBoardUpdateListener().subscribe((boards:Board[]) =>{
+    //   boards.find(x =>{
+    //    columnNameFetched = x.name;
+    //    columItemFetched = x.columns;
+    //    this.board.columns.push( new Column(columnNameFetched,columItemFetched));
+    //   });
       
-    });
+    // });
   }
-  
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
-    this.board.columns.push( new Column(columnName,[]));
-    this.crudBackend.newColumn(columnName);
+    this.column.push(new Column(columnName, []));
+   // this.crudBackend.newColumn(columnName);
     
   }
   onCreateNewTask(getColumnName: any){
     var taskname = prompt("Please enter the name of the task", "New Task");
-    this.board.columns.find(x => {
-      x.name === getColumnName
-      x.columns.push(taskname);
-      if(x.name != getColumnName){
-        x.columns.pop();
+    this.column.find((data)=>{
+      this.history.push("ad")
+      data.columns.push(new Description(taskname,"", this.history));
+        if(data.name != getColumnName){
+            data.columns.pop();
       }
-    });
-  
+      })
+   // this.crudBackend.newTask(taskname, getColumnName);
+  }
+  onDeleteColumn(getColumnName:any, getTasks:any){
+    for(var i = this.column.length - 1; i >= 0; i--) {
+      if(this.column[i].name === getColumnName) {
+        this.column.splice(i, 1);
+      }
+  }
   }
   onEditBoardName(){
      var getBoardName = prompt("Please enter the board Name", "New Board");
-      this.board.name = getBoardName;
-      this.boardName = getBoardName;
       
   }
+  descriptionMethod(description,gettaskName){
+    this.column.find((data)=>{
+      for(var i = data.columns.length - 1; i >= 0; i--) {
+        if(data.columns[i].taskName === gettaskName) {
+          data.columns[i].desc = description;
+        }
+      }
+    })
+  }
+  toggleModal(items, getColumnName) {
+    console.log(this.itemSeleted);
+    this.itemSeleted = items;
+    this.itemFromColumn = getColumnName;
+    this.isModalActive = !this.isModalActive;
+   
+  }
+  editTaskName(gettaskName){
+    var editName = prompt("Please enter the new taskName", "New Task Name");
+    this.column.find((data)=>{
+      for(var i = data.columns.length - 1; i >= 0; i--) {
+        if(data.columns[i].taskName === gettaskName) {
+          this.itemSeleted = editName;
+          data.columns[i].taskName = editName;
+          console.log( data.columns[i].taskName);
+        }
+      }
+    })
+  }
+  toggleModalClose(){
+    this.isModalActive = !this.isModalActive;
+  }
   ondeleteTask(item, getColumnName){
-     console.log(item);
-     console.log(getColumnName);
-     var name= this.board.columns.find(x => {
-      x.name === getColumnName
-     var number = x.columns.indexOf(item);
-     if (number > -1) {
-     x.columns.splice(number, 1);
-     }
-    });
+    for(var i = this.column.length - 1; i >= 0; i--) {
+      if(this.column[i].name === getColumnName) {
+        for(var a = this.column[i].columns.length -1; a>=0; a--){
+          if(this.column[i].columns[a].taskName === item){
+            this.column[i].columns.splice(a, 1);
+          }
+        }
+      }
+  }
   }
  
   drop(event: CdkDragDrop<string[]>) {

@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Board } from './models/board.model';
+import { Injectable, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
 import{HttpClient} from "@angular/common/http";
 import { HttpClientModule } from '@angular/common/http'; 
 import{map} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Column } from './models/column.model';
 @Injectable({
   providedIn: 'root'
 })
 export class CrudBackendService {
   
-  private boards: Board[]=[];
+  
   private boardUpdated = new Subject<Board[]>();
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,23 @@ this.http.post<{message:string, postId:string}>('http://localhost:3000/api/board
   console.log(responseData.message);
   });
 }
+newTask(taskname: string, getColumnName: any) {
+  
 
+
+  // let a = this.boards.find((data)=>{
+  //    if(getColumnName == data.name){
+  //      this.boards.find((b)=>{
+  //        b.columns.push({name: null, columns:[taskname]});
+  //       const board: Board = {name: getColumnName, columns:b.columns};
+  //       this.http.patch<{message:string, postId:string}>('http://localhost:3000/api/boards',board)
+  //            .subscribe((responseData)=>{
+  //           console.log(responseData.message);
+  //         });
+  //      })
+  //    }
+  // })
+}
 getBoard(){
   this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards')
   .pipe(map((boardData)=>{
