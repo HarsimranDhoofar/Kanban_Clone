@@ -11,15 +11,12 @@ import { Column } from './models/column.model';
 export class CrudBackendService {
   
   
-  private boardUpdated = new Subject<Board[]>();
+  private boardUpdated = new Subject<Column[]>();
   constructor(private http: HttpClient) { }
 
-newColumn(columnName: any){
-console.log("service works!")
-const board: Board = {name: columnName, columns:null};
-this.http.post<{message:string, postId:string}>('http://localhost:3000/api/boards',board)
-.subscribe((responseData)=>{
-  console.log(responseData.message);
+newColumn(col: Column){
+this.http.post<{message:string, postId:string}>('http://localhost:3000/api/boards',col).subscribe((responseData)=>{
+        console.log(responseData.message);
   });
 }
 newTask(taskname: string, getColumnName: any) {
@@ -50,8 +47,8 @@ getBoard(){
      });
   }))
   .subscribe((transformedBoard)=>{
-    this.boards =transformedBoard;
-    this.boardUpdated.next([...this.boards]);
+    // this.boards =transformedBoard;
+    // this.boardUpdated.next([...this.boards]);
  });
 }
 getBoardUpdateListener(){

@@ -1,7 +1,15 @@
 const mongoose =require('mongoose');
 //const column = require('../../src/app/models/column.model')
-const boardSchema= mongoose.Schema({
-    name: {type:String, required:true},
-    columns: {type:Array, required:true}
+const columnSchema= mongoose.Schema({
+    _id: String,
+    name: String,
+    columns: [{
+        taskName: String,
+        desc: String,
+        history: Array,
+        _id: String
+    }
+        
+    ]
 });
-module.exports=mongoose.model('Board', boardSchema);
+module.exports=mongoose.model('Board', columnSchema);

@@ -38,15 +38,16 @@ export class MainViewComponent implements OnInit {
   }
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
-    this.column.push(new Column(columnName, []));
-   // this.crudBackend.newColumn(columnName);
+    var col = new Column(this.makeid(9),columnName, [])
+    this.column.push(col);
+    this.crudBackend.newColumn(col);
     
   }
   onCreateNewTask(getColumnName: any){
     var taskname = prompt("Please enter the name of the task", "New Task");
     this.column.find((data)=>{
       this.history.push("ad")
-      data.columns.push(new Description(taskname,"", this.history));
+      data.columns.push(new Description(this.makeid(9),taskname,"", this.history));
         if(data.name != getColumnName){
             data.columns.pop();
       }
@@ -107,6 +108,14 @@ export class MainViewComponent implements OnInit {
   }
   }
  
+
+
+
+
+
+
+
+
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -116,5 +125,15 @@ export class MainViewComponent implements OnInit {
                         event.previousIndex,
                         event.currentIndex);
     }
+  }
+
+  makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result.toString();
   }
 }

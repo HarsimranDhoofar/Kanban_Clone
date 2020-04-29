@@ -4,13 +4,19 @@ const Board = require('../models/board');
 
 router.post('', (req, res, next) => {
     const board = new Board({
+        _id: req.body._id,
         name: req.body.name,
-        column: req.body.column
+        column: [{
+            _id: req.body._id,
+            taskName:"",
+            desc: "",
+            history:[""]
+        }]
     });
     board.save().then(result => {
         res.status(201).json({
             message: "Post added successfully",
-           // postId: result.id
+            postId: result.id
         });
     });
 

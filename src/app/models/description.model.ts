@@ -1,3 +1,3 @@
 export class Description{
-    constructor(public taskName:string , public desc:string, public history:string[]){}
+    constructor(public _id: string, public taskName:string , public desc:string, public history:string[]){}
 }
