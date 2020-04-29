@@ -24,8 +24,14 @@ router.post('', (req, res, next) => {
 
 router.patch('', (req, res, next) => {
     const board = new Board({
+        _id: req.body._id,
         name: req.body.name,
-        column: req.body.column
+        column: [{
+            _id: req.body._id,
+            taskName:req.body.taskName,
+            desc: "",
+            history:[""]
+        }]
     });
     board.save().then(result => {
         res.status(201).json({

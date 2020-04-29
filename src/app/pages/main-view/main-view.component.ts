@@ -24,17 +24,8 @@ export class MainViewComponent implements OnInit {
   }
   
   getBoardData(){
-    var columnNameFetched ="";
-    var columItemFetched=[];
     this.crudBackend.getBoard();
-    // this.boardSub= this.crudBackend.getBoardUpdateListener().subscribe((boards:Board[]) =>{
-    //   boards.find(x =>{
-    //    columnNameFetched = x.name;
-    //    columItemFetched = x.columns;
-    //    this.board.columns.push( new Column(columnNameFetched,columItemFetched));
-    //   });
-      
-    // });
+    
   }
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
@@ -46,14 +37,15 @@ export class MainViewComponent implements OnInit {
   onCreateNewTask(getColumnName: any){
     var taskname = prompt("Please enter the name of the task", "New Task");
     this.column.find((data)=>{
-      this.history.push("ad")
+      this.history.push("New Task Created on: "+ Date.now())
       data.columns.push(new Description(this.makeid(9),taskname,"", this.history));
         if(data.name != getColumnName){
             data.columns.pop();
       }
       })
-   // this.crudBackend.newTask(taskname, getColumnName);
+    this.crudBackend.newTask(taskname, getColumnName);
   }
+  
   onDeleteColumn(getColumnName:any, getTasks:any){
     for(var i = this.column.length - 1; i >= 0; i--) {
       if(this.column[i].name === getColumnName) {
