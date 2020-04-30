@@ -24,7 +24,29 @@ export class MainViewComponent implements OnInit {
   }
   
   getBoardData(){
-    this.crudBackend.getBoard();
+    this.crudBackend.getBoard().subscribe((data)=>{
+      const col = data["boards"]
+      for(let i =0; i<=Object.keys(col).length -1; i++){
+        const len = col[i]
+        const _id = len['_id'];
+        const columnName = len['name'];
+        const taskLength = len['columns'];
+        const description:Array<Description> =[];
+        for(let a=0; a<=Object.keys(taskLength).length -1; a++){
+           const leng = taskLength[a];
+           const taskId = leng['_id'];
+           const desc = leng['desc'];
+           const history = leng['history'];
+           const taskName = leng['taskName'];
+            description.push(new Description(taskId,taskName, desc, history))
+           
+        }
+        this.column.push(new Column(_id, columnName, description));
+
+      } 
+  
+      
+    });
     
   }
   onCreateNewColumn(){
@@ -34,7 +56,8 @@ export class MainViewComponent implements OnInit {
     this.crudBackend.newColumn(col);
     
   }
-  onCreateNewTask(getColumnName: any){
+  onCreateNewTask(id:any, getColumnName: any){
+
     var taskname = prompt("Please enter the name of the task", "New Task");
     this.column.find((data)=>{
       this.history.push("New Task Created on: "+ Date.now())
@@ -42,16 +65,22 @@ export class MainViewComponent implements OnInit {
         if(data.name != getColumnName){
             data.columns.pop();
       }
+      const col = new Column(id, getColumnName, data.columns);
+      this.crudBackend.newTask(col);
       })
-    this.crudBackend.newTask(taskname, getColumnName);
+  
   }
   
-  onDeleteColumn(getColumnName:any, getTasks:any){
+  onDeleteColumn(id:any, getColumnName:any, getTasks:any){
+    const conf = confirm('Are you sure you want to delete this column');
+    if(conf == true){
     for(var i = this.column.length - 1; i >= 0; i--) {
       if(this.column[i].name === getColumnName) {
         this.column.splice(i, 1);
       }
   }
+    this.crudBackend.deleteColumn(id);
+}
   }
   onEditBoardName(){
      var getBoardName = prompt("Please enter the board Name", "New Board");

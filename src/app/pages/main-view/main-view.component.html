@@ -20,8 +20,8 @@
                 <div class="board-column" *ngFor="let col of column">
                     <div class="column-title">
                         {{col.name}}
-                        <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(col.name)"><i class="fa fa-plus"></i></button>
-                        &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col.name, col.columns)"><i class="fa fa-trash"></i></button>
+                        <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(col._id,col.name)"><i class="fa fa-plus"></i></button>
+                        &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col._id, col.name, col.columns)"><i class="fa fa-trash"></i></button>
                     </div>
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="col.columns" (cdkDropListDropped)="drop($event)">
                         <div class="task" (click)="toggleModal(item.taskName,col.name)" *ngFor="let item of col.columns" cdkDrag>

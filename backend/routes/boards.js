@@ -6,12 +6,13 @@ router.post('', (req, res, next) => {
     const board = new Board({
         _id: req.body._id,
         name: req.body.name,
-        column: [{
+        columns: [{
             _id: req.body._id,
             taskName:"",
             desc: "",
             history:[""]
-        }]
+        }
+        ]
     });
     board.save().then(result => {
         res.status(201).json({
@@ -22,21 +23,18 @@ router.post('', (req, res, next) => {
 
 });
 
-router.patch('', (req, res, next) => {
+router.put('', (req, res, next) => {
     const board = new Board({
         _id: req.body._id,
         name: req.body.name,
-        column: [{
-            _id: req.body._id,
-            taskName:req.body.taskName,
-            desc: "",
-            history:[""]
-        }]
+        columns: req.body.columns
     });
-    board.save().then(result => {
-        res.status(201).json({
-            message: "Post updated successfully",
-           // postId: result.id
+    Board.updateOne({
+        _id: req.body._id
+    },board).then(result => {
+        res.status(200).json({
+            message: "updated successfully",
+             postId: result.id
         });
     });
 
@@ -57,17 +55,17 @@ router.patch('', (req, res, next) => {
 //     });
 // });
 
-// router.delete('/:id', (req, res, next) => {
-//     Post.deleteOne({
-//         _id: req.params.id
-//     }).then(result => {
-//         console.log(result);
-//         res.status(200).json({
-//             message: "Post deleted"
-//         })
-//     })
+router.delete('/:_id', (req, res, next) => {
+    Board.deleteOne({
+        _id: req.params._id
+    }).then(result => {
+        console.log(result);
+        res.status(200).json({
+            message: "Post deleted"
+        })
+    })
 
-// });
+});
 // router.get('/:id', (req, res, next) => {
 //   Post.findById(req.params.id).then(post=>{
 //       if(post){

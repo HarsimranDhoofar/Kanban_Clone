@@ -8,8 +8,6 @@ const columnSchema= mongoose.Schema({
         desc: String,
         history: Array,
         _id: String
-    }
-        
-    ]
+    }]
 });
 module.exports=mongoose.model('Board', columnSchema);
