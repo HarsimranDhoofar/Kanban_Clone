@@ -45,7 +45,33 @@
                 <div class="board-column" *ngFor="let col of column">
                     <div class="column-title">
                         {{col.name}}
+                        <br/>
                         <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(col._id,col.name)"><i class="fa fa-plus"></i></button>
+                        <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
+                          <button type="button" class="button is-small is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i></button>
+                        </div>
+                        <ng-template #voicesection>
+                          <ng-container *ngIf="!voiceActiveSectionError; else failure">
+                            <ng-container *ngIf="voiceText; else start">
+                              <span>{{voiceText}}</span>
+                            </ng-container>
+                            <ng-template #start>
+                              <ng-container *ngIf="voiceActiveSectionListening; else beginning">
+                                <span>Listening…</span>
+                              </ng-container>
+                              <ng-template #beginning>
+                                <span>Start talking…</span>
+                              </ng-template>
+                            </ng-template>
+                          </ng-container>
+                          <ng-template #failure>
+                            <span>Didn’t catch that</span>
+                          </ng-template>
+                          <div>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognition()"><i class="fa fa-times"></i></button>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
+                          </div>
+                        </ng-template>
                         &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col._id, col.name, col.columns)"><i class="fa fa-trash"></i></button>
                     </div>
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="col.columns" (cdkDropListDropped)="drop($event)">

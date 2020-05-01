@@ -11,7 +11,7 @@
 }
 
 .has-gradient-text {
-    background: -webkit-linear-gradient(blue, green);
+    background: white;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -46,7 +46,7 @@
                 flex-direction: column;
                 flex-grow: 1;
                 flex-basis: 0; // to force all the columns to all be the same size, regardless of the content
-                max-width: 300px;
+                min-width: 300px;
                 margin: 50px;
                 padding: 25px;
                 border-radius: 4px;
@@ -61,7 +61,7 @@
                     text-transform: uppercase;
                     margin-bottom: 20px;
                     .button{
-                        float: right;
+                        float: left;
                         margin-left: 2px;
                     }
                 }
