@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { Column } from 'src/app/models/column.model';
 import { Description } from 'src/app/models/description.model';
 import{ CrudBackendService } from '../../crud-backend.service';
 import { Subscription } from 'rxjs';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+declare const annyang: any;
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.scss']
+  styleUrls: ['./main-view.component.scss'],
 })
 export class MainViewComponent implements OnInit {
+  
+  voiceActiveSectionDisabled: boolean = true;
+  voiceActiveSectionError: boolean = false;
+  voiceActiveSectionSuccess: boolean = false;
+  voiceActiveSectionListening: boolean = false;
+  voiceText: any;
   isModalActive: boolean = false;
   itemSeleted: String ="";
   itemFromColumn: any;
@@ -18,11 +25,83 @@ export class MainViewComponent implements OnInit {
   history:string[]=[];
   boardSub: Subscription
   value: String;
-  constructor(public crudBackend: CrudBackendService) { }
+  message = '';
+  constructor(public crudBackend: CrudBackendService, private ngZone: NgZone) { }
+
+  initializeVoiceRecognitionCallback(): void {
+    annyang.addCallback('error', (err) => {
+      if(err.error === 'network'){
+        this.voiceText = "Internet is require";
+        annyang.abort();
+        this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+      } else if (this.voiceText === undefined) {
+        this.ngZone.run(() => this.voiceActiveSectionError = true);
+        annyang.abort();
+      }
+    });
+   annyang.addCallback('soundstart', (res) => {
+    this.ngZone.run(() => this.voiceActiveSectionListening = true);
+   });
+   annyang.addCallback('end', () => {
+     if (this.voiceText === undefined) {
+       this.ngZone.run(() => this.voiceActiveSectionError = true);
+       annyang.abort();
+     }
+   });
+   annyang.addCallback('result', (userSaid) => {
+     this.ngZone.run(() => this.voiceActiveSectionError = false);
+     let queryText: any = userSaid[0];
+     annyang.abort();
+     this.voiceText = queryText;
+     this.ngZone.run(() => this.voiceActiveSectionListening = false);
+     this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+     this.onCreateNewColumnVoice();
+     this.voiceActiveSectionDisabled = true;
+   this.voiceActiveSectionError = false;
+   this.voiceActiveSectionSuccess = false;
+   this.voiceActiveSectionListening = false;
+   this.voiceText = undefined;
+   if(annyang){
+    annyang.abort();
+   }
+
+   });
+   
+ }
+ startVoiceRecognition(): void {
+   this.voiceActiveSectionDisabled = false;
+   this.voiceActiveSectionError = false;
+   this.voiceActiveSectionSuccess = false;
+   this.voiceText = undefined;
+   if (annyang) {
+     let commands = {
+       'demo-annyang': () => { }
+     };
+     annyang.addCommands(commands);
+    
+     this.initializeVoiceRecognitionCallback();
+     annyang.start({ autoRestart: false });
+   }
+ }
+ closeVoiceRecognition(): void {
+   this.voiceActiveSectionDisabled = true;
+   this.voiceActiveSectionError = false;
+   this.voiceActiveSectionSuccess = false;
+   this.voiceActiveSectionListening = false;
+   this.voiceText = undefined;
+   if(annyang){
+    annyang.abort();
+   }
+ }
+
+
+
+
+
+
   ngOnInit(): void {
     this.getBoardData();
   }
-  
   getBoardData(){
     this.crudBackend.getBoard().subscribe((data)=>{
       const col = data["boards"]
@@ -52,6 +131,12 @@ export class MainViewComponent implements OnInit {
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
     var col = new Column(this.makeid(9),columnName, [])
+    this.column.push(col);
+    this.crudBackend.newColumn(col);
+    
+  }
+  onCreateNewColumnVoice(){
+    var col = new Column(this.makeid(9),this.voiceText, [])
     this.column.push(col);
     this.crudBackend.newColumn(col);
     
@@ -117,7 +202,7 @@ export class MainViewComponent implements OnInit {
   toggleModalClose(){
     this.isModalActive = !this.isModalActive;
   }
-  ondeleteTask(item, getColumnName){
+  ondeleteTask(taskId, colId, item, getColumnName){
     for(var i = this.column.length - 1; i >= 0; i--) {
       if(this.column[i].name === getColumnName) {
         for(var a = this.column[i].columns.length -1; a>=0; a--){
@@ -127,6 +212,7 @@ export class MainViewComponent implements OnInit {
         }
       }
   }
+  this.crudBackend.deleteTask(taskId, colId, item);
   }
  
 
@@ -138,8 +224,10 @@ export class MainViewComponent implements OnInit {
 
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log(event.container.data, event.previousIndex, event.currentIndex)
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      
     } else {
       transferArrayItem(event.previousContainer.data,
                         event.container.data,

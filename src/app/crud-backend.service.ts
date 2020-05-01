@@ -10,6 +10,7 @@ import { Description } from './models/description.model';
   providedIn: 'root'
 })
 export class CrudBackendService {
+  
   private boardUpdated = new Subject<Column[]>();
   boards: Array<Column> =[];
   history: Array<any>  =[];
@@ -38,6 +39,11 @@ newTask(col: Column) {
 });
 }
 
+deleteTask(taskId: any, colId: any, item:any) {
+  this.http.delete<{message:string}>("http://localhost:3000/api/boards/" + colId +"/"+item).subscribe((responseData)=>{
+    console.log(responseData.message);
+  });
+}
 
 getBoard(){
   return this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards')

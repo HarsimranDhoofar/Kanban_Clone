@@ -66,6 +66,23 @@ router.delete('/:_id', (req, res, next) => {
     })
 
 });
+
+router.delete('/:colId/:taskName', (req, res, next) => {
+    Board.updateOne({$pull:{ columns : {taskName: req.params.taskName.toString()}}}).then(board=>{
+        
+        const col = board['columns'];
+        for(let i =0; i<=Object.keys(col).length -1; i++){
+           const len = col[i];
+           const tName = len['_id'];
+           if(req.params.taskId == tName){
+               console.log("reached here")
+               
+          }
+        }
+
+    })
+
+});
 // router.get('/:id', (req, res, next) => {
 //   Post.findById(req.params.id).then(post=>{
 //       if(post){
