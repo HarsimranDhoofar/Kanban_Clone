@@ -8,10 +8,12 @@
     font-size: 20px;
     font-family: 'Lato', sans-serif;
     font-weight: bold;
+    margin: auto;
+    text-align: center;
 }
 
 .has-gradient-text {
-    background: white;
+    background: #CD9A9D;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -32,6 +34,8 @@
         }
         .buttons{
             float: right;
+            margin-right: 2px;
+            margin-left: 2px;
         }
     }
     .board-wrapper {
@@ -62,7 +66,8 @@
                     margin-bottom: 20px;
                     .button{
                         float: left;
-                        margin-left: 2px;
+                       
+                        
                     }
                 }
             }
@@ -86,7 +91,7 @@
     margin-bottom: 15px;
     .button{
         display:block;
-        float: right;
+        float: inline-start;
     }
     
 }

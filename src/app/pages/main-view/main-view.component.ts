@@ -157,7 +157,7 @@ export class MainViewComponent implements OnInit {
   }
   
   onDeleteColumn(id:any, getColumnName:any, getTasks:any){
-    const conf = confirm('Are you sure you want to delete this column');
+    const conf = confirm('Are you sure you want to delete this column?');
     if(conf == true){
     for(var i = this.column.length - 1; i >= 0; i--) {
       if(this.column[i].name === getColumnName) {
@@ -186,6 +186,12 @@ export class MainViewComponent implements OnInit {
     this.itemFromColumn = getColumnName;
     this.isModalActive = !this.isModalActive;
    
+  }
+  onClearEveryThing(){
+    const conf = confirm('Are you sure you want to delete everything and start fresh?');
+    if(conf == true){
+    this.column = [];
+    }
   }
   editTaskName(gettaskName){
     var editName = prompt("Please enter the new taskName", "New Task Name");
