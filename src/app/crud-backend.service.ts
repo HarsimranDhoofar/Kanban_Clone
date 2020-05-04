@@ -38,7 +38,22 @@ newTask(col: Column) {
 
 });
 }
-
+editTask(col: Column) {
+  const taskId = col['columns'];
+  const a = taskId[0];
+  const b = a['_id']
+  console.log(b);
+  this.http.put<{message:string, postId:string}>('http://localhost:3000/api/boards/edit/'+ taskId, col)
+  .subscribe((responseData)=>{
+ console.log(responseData.message);
+  });
+}
+clearEveryThing() {
+  console.log('we are here')
+  this.http.delete<{message:string}>("http://localhost:3000/api/boards/clearEveryThing/All/E").subscribe((responseData)=>{
+    console.log(responseData.message);
+  })
+}
 deleteTask(taskId: any, colId: any, item:any) {
   this.http.delete<{message:string}>("http://localhost:3000/api/boards/" + colId +"/"+item).subscribe((responseData)=>{
     console.log(responseData.message);
@@ -46,7 +61,7 @@ deleteTask(taskId: any, colId: any, item:any) {
 }
 
 getBoard(){
-  return this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards')
+  return this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards');
 }
 
 

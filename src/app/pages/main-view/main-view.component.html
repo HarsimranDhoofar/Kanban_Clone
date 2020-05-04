@@ -13,7 +13,7 @@
                 <div class="buttons are-small">
                  <button class="button is-primary is-inverted is-outlined is-light" (click)="onCreateNewColumn()"><i class="fa fa-plus"></i>&nbsp;Create New Column</button>
                  <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
-                    <button type="button" class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i></button>
+                    <button type="button" class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionColumn()"><i class="fa fa-microphone"></i></button>
                   </div>
                   &nbsp;
                   <button class="button is-danger is-inverted is-outlined is-light" (click)="onClearEveryThing()"><i class="fa fa-times"></i>&nbsp;Start-Fresh</button>
@@ -36,7 +36,7 @@
                     </ng-template>
                     <div>
                       <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognition()"><i class="fa fa-times"></i></button>
-                      <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
+                      <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionColumn()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
                     </div>
                   </ng-template>
                 </div>
@@ -49,36 +49,36 @@
                         {{col.name}}
                         <br/>
                         <button class="button is-small is-link is-inverted is-outlined is-light" (click)="onCreateNewTask(col._id,col.name)"><i class="fa fa-plus"></i></button>
-                        <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
-                          <button type="button" class="button is-small is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i></button>
-                        </div>
-                        <ng-template #voicesection>
-                          <ng-container *ngIf="!voiceActiveSectionError; else failure">
-                            <ng-container *ngIf="voiceText; else start">
-                              <span>{{voiceText}}</span>
+                        <!-- <div *ngIf="voiceActiveSectionTasksDisabled; else voices;">
+                          <button type="button" class="button is-small is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionTask(col._id,col.name)"><i class="fa fa-microphone"></i></button>
+                        </div> -->
+                        <ng-template #voices>
+                          <ng-container *ngIf="!voiceActiveSectionTasksError; else failures">
+                            <ng-container *ngIf="voiceTextTask; else starts">
+                              <span>{{voiceTextTask}}</span>
                             </ng-container>
-                            <ng-template #start>
-                              <ng-container *ngIf="voiceActiveSectionListening; else beginning">
+                            <ng-template #starts>
+                              <ng-container *ngIf="voiceActiveSectionTasksListening; else beginnings">
                                 <span>Listening…</span>
                               </ng-container>
-                              <ng-template #beginning>
+                              <ng-template #beginnings>
                                 <span>Start talking…</span>
                               </ng-template>
                             </ng-template>
                           </ng-container>
-                          <ng-template #failure>
+                          <ng-template #failures>
                             <span>Didn’t catch that</span>
                           </ng-template>
                           <div>
-                            <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognition()"><i class="fa fa-times"></i></button>
-                            <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognition()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognitions()"><i class="fa fa-times"></i></button>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionTask()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
                           </div>
                         </ng-template>
                         &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col._id, col.name, col.columns)"><i class="fa fa-trash"></i></button>
                     </div>
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="col.columns" (cdkDropListDropped)="drop($event)">
-                        <div class="task" (click)="toggleModal(item.taskName,col.name)" *ngFor="let item of col.columns" cdkDrag>
-                            {{item.taskName}}
+                        <div class="task" (click)="toggleModal(col.id, item.taskName, col.name)" *ngFor="let item of col.columns"  cdkDrag>
+                          <p> {{item.taskName}}</p> 
                             <button class="button is-small is-danger is-light" (click)="ondeleteTask(item._id, col._id, item.taskName,col.name)"><i class="fa fa-trash"></i></button>
                         </div>
                         

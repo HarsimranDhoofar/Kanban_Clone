@@ -14,10 +14,17 @@ declare const annyang: any;
 export class MainViewComponent implements OnInit {
   
   voiceActiveSectionDisabled: boolean = true;
+  voiceActiveSectionDisabledTask: boolean = true;
   voiceActiveSectionError: boolean = false;
   voiceActiveSectionSuccess: boolean = false;
   voiceActiveSectionListening: boolean = false;
-  voiceText: any;
+  voiceActiveSectionTasksDisabled: boolean = true;
+  voiceActiveSectionTasksDisabledTask: boolean = true;
+  voiceActiveSectionTasksError: boolean = false;
+  voiceActiveSectionTasksSuccess: boolean = false;
+  voiceActiveSectionTasksListening: boolean = false;
+  voiceText: string;
+  voiceTextTask: string;
   isModalActive: boolean = false;
   itemSeleted: String ="";
   itemFromColumn: any;
@@ -26,6 +33,8 @@ export class MainViewComponent implements OnInit {
   boardSub: Subscription
   value: String;
   message = '';
+  onClickTaskColid: any;
+  onClickTaskItem: any;
   constructor(public crudBackend: CrudBackendService, private ngZone: NgZone) { }
 
   initializeVoiceRecognitionCallback(): void {
@@ -55,20 +64,15 @@ export class MainViewComponent implements OnInit {
      this.voiceText = queryText;
      this.ngZone.run(() => this.voiceActiveSectionListening = false);
      this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
-     this.onCreateNewColumnVoice();
-     this.voiceActiveSectionDisabled = true;
-   this.voiceActiveSectionError = false;
-   this.voiceActiveSectionSuccess = false;
-   this.voiceActiveSectionListening = false;
-   this.voiceText = undefined;
-   if(annyang){
-    annyang.abort();
-   }
-
+     if(this.voiceText !=null && this.voiceText !=""){
+      this.onCreateNewColumnVoice();
+      annyang.abort();
+     }
+     this.closeVoiceRecognition()
    });
    
  }
- startVoiceRecognition(): void {
+ startVoiceRecognitionColumn(): void {
    this.voiceActiveSectionDisabled = false;
    this.voiceActiveSectionError = false;
    this.voiceActiveSectionSuccess = false;
@@ -81,8 +85,60 @@ export class MainViewComponent implements OnInit {
     
      this.initializeVoiceRecognitionCallback();
      annyang.start({ autoRestart: false });
+     
    }
  }
+ startVoiceRecognitionTask(id:any, getColumnName: any){
+  this.voiceActiveSectionTasksDisabled = false;
+  this.voiceActiveSectionTasksError = false;
+  this.voiceActiveSectionTasksSuccess = false;
+  this.voiceTextTask = undefined;
+  if (annyang) {
+    let commands = {
+      'demo-annyang': () => { }
+    };
+    annyang.addCommands(commands);
+   
+    this.initializeVoiceRecognitionCallbackTask(id, getColumnName);
+    annyang.start({ autoRestart: false });
+    
+  }
+ }
+ initializeVoiceRecognitionCallbackTask(id: any, getColumnName: any): void {
+  annyang.addCallback('error', (err) => {
+    if(err.error === 'network'){
+      this.voiceTextTask = "Internet is require";
+      annyang.abort();
+      this.ngZone.run(() => this.voiceActiveSectionTasksSuccess = true);
+    } else if (this.voiceTextTask === undefined) {
+      this.ngZone.run(() => this.voiceActiveSectionTasksError = true);
+      annyang.abort();
+    }
+  });
+ annyang.addCallback('soundstart', (res) => {
+  this.ngZone.run(() => this.voiceActiveSectionTasksListening = true);
+ });
+ annyang.addCallback('end', () => {
+   if (this.voiceTextTask === undefined) {
+     this.ngZone.run(() => this.voiceActiveSectionTasksError = true);
+     annyang.abort();
+   }
+ });
+ annyang.addCallback('result', (userSaid) => {
+   this.ngZone.run(() => this.voiceActiveSectionTasksError = false);
+   let queryText: any = userSaid[0];
+   annyang.abort();
+   this.voiceTextTask = queryText;
+   this.ngZone.run(() => this.voiceActiveSectionTasksListening = false);
+   this.ngZone.run(() => this.voiceActiveSectionTasksSuccess = true);
+   if(this.voiceText !=null && this.voiceText !=""){
+    this.onCreateNewTaskVoice(id, getColumnName, this.voiceTextTask);
+    annyang.abort();
+   }
+   this.closeVoiceRecognition()
+ });
+ 
+}
  closeVoiceRecognition(): void {
    this.voiceActiveSectionDisabled = true;
    this.voiceActiveSectionError = false;
@@ -117,7 +173,9 @@ export class MainViewComponent implements OnInit {
            const desc = leng['desc'];
            const history = leng['history'];
            const taskName = leng['taskName'];
+           if(taskName != null && taskName !=""){
             description.push(new Description(taskId,taskName, desc, history))
+           }
            
         }
         this.column.push(new Column(_id, columnName, description));
@@ -130,9 +188,15 @@ export class MainViewComponent implements OnInit {
   }
   onCreateNewColumn(){
     var columnName = prompt("Please enter the name of the column", "New Column");
-    var col = new Column(this.makeid(9),columnName, [])
-    this.column.push(col);
-    this.crudBackend.newColumn(col);
+    if(columnName != null && columnName !=""){
+      var col = new Column(this.makeid(9),columnName, [])
+      this.column.push(col);
+      this.crudBackend.newColumn(col);
+    }
+    else{
+      alert("Column name can not be empty");
+    }
+    
     
   }
   onCreateNewColumnVoice(){
@@ -144,6 +208,7 @@ export class MainViewComponent implements OnInit {
   onCreateNewTask(id:any, getColumnName: any){
 
     var taskname = prompt("Please enter the name of the task", "New Task");
+    if(taskname !=null && taskname !=""){
     this.column.find((data)=>{
       this.history.push("New Task Created on: "+ Date.now())
       data.columns.push(new Description(this.makeid(9),taskname,"", this.history));
@@ -153,9 +218,22 @@ export class MainViewComponent implements OnInit {
       const col = new Column(id, getColumnName, data.columns);
       this.crudBackend.newTask(col);
       })
-  
+    }
   }
-  
+  onCreateNewTaskVoice(id:any, getColumnName: any, voiceTaskName:any){
+
+    if(voiceTaskName !=null && voiceTaskName !=""){
+    this.column.find((data)=>{
+      this.history.push("New Task Created on: "+ Date.now())
+      data.columns.push(new Description(this.makeid(9),voiceTaskName,"", this.history));
+        if(data.name != getColumnName){
+            data.columns.pop();
+      }
+      const col = new Column(id, getColumnName, data.columns);
+      this.crudBackend.newTask(col);
+      })
+    }
+  }
   onDeleteColumn(id:any, getColumnName:any, getTasks:any){
     const conf = confirm('Are you sure you want to delete this column?');
     if(conf == true){
@@ -180,7 +258,10 @@ export class MainViewComponent implements OnInit {
       }
     })
   }
-  toggleModal(items, getColumnName) {
+  toggleModal(id, items, getColumnName) {
+   this.onClickTaskColid =id;
+   this.onClickTaskItem = items;
+   
     console.log(this.itemSeleted);
     this.itemSeleted = items;
     this.itemFromColumn = getColumnName;
@@ -191,9 +272,10 @@ export class MainViewComponent implements OnInit {
     const conf = confirm('Are you sure you want to delete everything and start fresh?');
     if(conf == true){
     this.column = [];
+    this.crudBackend.clearEveryThing();
     }
   }
-  editTaskName(gettaskName){
+  editTaskName(gettaskName: any){
     var editName = prompt("Please enter the new taskName", "New Task Name");
     this.column.find((data)=>{
       for(var i = data.columns.length - 1; i >= 0; i--) {
@@ -203,7 +285,12 @@ export class MainViewComponent implements OnInit {
           console.log( data.columns[i].taskName);
         }
       }
+      const col = new Column(this.onClickTaskColid, this.onClickTaskItem, data.columns);
+      this.crudBackend.editTask(col);
+
+      
     })
+    
   }
   toggleModalClose(){
     this.isModalActive = !this.isModalActive;

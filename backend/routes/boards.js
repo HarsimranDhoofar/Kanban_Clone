@@ -39,6 +39,16 @@ router.put('', (req, res, next) => {
     });
 
 });
+router.put('/edit/:taskId', (req, res, next) => {
+
+    Board.findByIdAndUpdate({ columns : {taskName: req.params.taskId.toString()}}).then(result => {
+        res.status(203).json({
+            message: "Task Name Updated",
+             postId: result.id
+        });
+    });
+
+});
 
 // router.put('', (req, res, next) => {
 //     const post = new Post({
@@ -67,6 +77,16 @@ router.delete('/:_id', (req, res, next) => {
 
 });
 
+router.delete('/clearEveryThing/All/E', (req, res, next) => {
+    console.log("we are in nodejs")
+    Board.remove().then(result => {
+        console.log(result);
+        res.status(202).json({
+            message: "Everything Deleted"
+        })
+        })
+
+});
 router.delete('/:colId/:taskName', (req, res, next) => {
     Board.updateOne({$pull:{ columns : {taskName: req.params.taskName.toString()}}}).then(board=>{
         
