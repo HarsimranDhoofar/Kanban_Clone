@@ -70,8 +70,8 @@
                             <span>Didn’t catch that</span>
                           </ng-template>
                           <div>
-                            <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognitions()"><i class="fa fa-times"></i></button>
-                            <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionTask()"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="closeVoiceRecognition()"><i class="fa fa-times"></i></button>
+                            <button class="button is-link is-inverted is-outlined is-light" (click)="startVoiceRecognitionTask(col._id, col.name)"><i class="fa fa-microphone"></i> &nbsp;Restart</button>
                           </div>
                         </ng-template>
                         &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col._id, col.name, col.columns)"><i class="fa fa-trash"></i></button>
