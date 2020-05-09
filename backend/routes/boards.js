@@ -39,6 +39,18 @@ router.put('', (req, res, next) => {
     });
 
 });
+router.delete('edit/:colIdUserClickedOn/:taskNameToBeUpdated', (req, res, next) => {
+    Board.findByIdAndUpdate({ columns : 
+              {$set:{taskName: req.params.taskNameToBeUpdated.toString()}
+            
+            }}).then(result => {
+        res.status(203).json({
+            message: "Task Name Updated",
+             postId: result.id
+        });
+    });
+
+});
 router.put('/edit/:taskId', (req, res, next) => {
 
     Board.findByIdAndUpdate({ columns : {taskName: req.params.taskId.toString()}}).then(result => {

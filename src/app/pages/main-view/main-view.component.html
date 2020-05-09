@@ -77,9 +77,9 @@
                         &nbsp;<button class="button is-small is-danger is-inverted is-outlined is-light" (click)="onDeleteColumn(col._id, col.name, col.columns)"><i class="fa fa-trash"></i></button>
                     </div>
                     <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="col.columns" (cdkDropListDropped)="drop($event)">
-                        <div class="task" (click)="toggleModal(col.id, item.taskName, col.name)" *ngFor="let item of col.columns"  cdkDrag>
+                        <div class="task" (click)="toggleModal(col._id, item.taskName, col.name)" *ngFor="let item of col.columns"  cdkDrag>
                           <p> {{item.taskName}}</p> 
-                            <button class="button is-small is-danger is-light" (click)="ondeleteTask(item._id, col._id, item.taskName,col.name)"><i class="fa fa-trash"></i></button>
+                            <!-- <button class="button is-small is-danger is-light" (click)="ondeleteTask(item._id, col._id, item.taskName,col.name)"><i class="fa fa-trash"></i></button> -->
                         </div>
                         
                     </div>
@@ -92,25 +92,51 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="modal" [ngClass]="{ 'is-active' : isModalActive }" *ngIf="itemSeleted">
     <div class="modal-background"></div>
     <form #description="ngForm" (ngSubmit)="descriptionMethod(description,itemSeleted)">
     <div class="modal-card">
       <header class="modal-card-head" >
         <p class="modal-card-title">{{itemSeleted}}</p>
-        <button class="button is-small is-link is-inverted is-outlined is-light" (click)="editTaskName(itemSeleted)"><i class="fa fa-edit"></i></button>
+       
         <button class="delete" aria-label="close" (click)="toggleModalClose()"></button>
       </header>
       <section class="modal-card-body">
-         
+        <button class="button is-small is-rounded is-dark" (click)="editTaskName(itemSeleted)"><i class="fa fa-edit"></i>&nbsp; Edit Task Name</button>&nbsp;
+        <button class="button is-small is-rounded is-danger" (click)="editTaskName(itemSeleted)"><i class="fa fa-times"></i>&nbsp; Delete Task</button>&nbsp;
+        <button class="button is-small is-rounded is-info" (click)="editTaskName(itemSeleted)"><i class="fa fa-microphone"></i>&nbsp; Speech to text description</button>&nbsp;
+        <br/>
         <textarea ngModel #desc="ngModel" type="email" name="desc" class="textarea form-control" placeholder="Your description" ></textarea>
           
-        <h5>History</h5>
+        <!-- <h5>History</h5>
         <article class="message">
             <div class="message-body">
               <p>card was created on this date</p>
             </div>
-          </article>
+          </article> -->
       </section>
       <footer class="modal-card-foot">
         <button type="submit" class="button is-success" >Save changes</button>

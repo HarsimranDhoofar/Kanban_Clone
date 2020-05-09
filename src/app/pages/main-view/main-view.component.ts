@@ -35,6 +35,8 @@ export class MainViewComponent implements OnInit {
   message = '';
   onClickTaskColid: any;
   onClickTaskItem: any;
+  col: any;
+  desc: Array<Description> =[];
   constructor(public crudBackend: CrudBackendService, private ngZone: NgZone) { }
 
   initializeVoiceRecognitionCallback(): void {
@@ -259,6 +261,7 @@ export class MainViewComponent implements OnInit {
     })
   }
   toggleModal(id, items, getColumnName) {
+    console.log(items);
    this.onClickTaskColid =id;
    this.onClickTaskItem = items;
    
@@ -276,19 +279,23 @@ export class MainViewComponent implements OnInit {
     }
   }
   editTaskName(gettaskName: any){
+    console.log(this.onClickTaskColid)
+    console.log(this.onClickTaskItem)
     var editName = prompt("Please enter the new taskName", "New Task Name");
     this.column.find((data)=>{
       for(var i = data.columns.length - 1; i >= 0; i--) {
         if(data.columns[i].taskName === gettaskName) {
           this.itemSeleted = editName;
           data.columns[i].taskName = editName;
-          console.log( data.columns[i].taskName);
+          console.log("This is now : "+data.columns[i])
+          // this.desc.push
+          // const col = new Column(this.onClickTaskColid, this.itemFromColumn, this.descdata.columns[i])
+          this.crudBackend.editTask(editName, this.onClickTaskColid);
         }
+       
       }
-      const col = new Column(this.onClickTaskColid, this.onClickTaskItem, data.columns);
-      this.crudBackend.editTask(col);
-
-      
+     
+    
     })
     
   }

@@ -14,8 +14,9 @@ export class CrudBackendService {
   private boardUpdated = new Subject<Column[]>();
   boards: Array<Column> =[];
   history: Array<any>  =[];
+  columnUpdateTask: Column = new Column("","",[]);
   constructor(private http: HttpClient) { }
-
+  
 
 newColumn(col: Column){
 this.http.post<{message:string, postId:string}>('http://localhost:3000/api/boards',col).subscribe((responseData)=>{
@@ -38,18 +39,15 @@ newTask(col: Column) {
 
 });
 }
-editTask(col: Column) {
-  const taskId = col['columns'];
-  const a = taskId[0];
-  const b = a['_id']
-  console.log(b);
-  this.http.put<{message:string, postId:string}>('http://localhost:3000/api/boards/edit/'+ taskId, col)
+editTask(taskNameToBeUpdated: any, colIdUserClickedOn: any) {
+  console.log(taskNameToBeUpdated);
+  
+  this.http.delete('http://localhost:3000/api/boards/edit/' + colIdUserClickedOn/taskNameToBeUpdated)
   .subscribe((responseData)=>{
- console.log(responseData.message);
+    
   });
 }
 clearEveryThing() {
-  console.log('we are here')
   this.http.delete<{message:string}>("http://localhost:3000/api/boards/clearEveryThing/All/E").subscribe((responseData)=>{
     console.log(responseData.message);
   })
