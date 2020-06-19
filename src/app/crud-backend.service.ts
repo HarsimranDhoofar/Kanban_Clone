@@ -19,21 +19,21 @@ export class CrudBackendService {
   
 
 newColumn(col: Column){
-this.http.post<{message:string, postId:string}>('http://localhost:3000/api/boards',col).subscribe((responseData)=>{
+this.http.post<{message:string, postId:string}>('http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards',col).subscribe((responseData)=>{
         console.log(responseData.message);
   });
 this.boards.push(col);
 }
 
 deleteColumn(_id: any) {
-  this.http.delete<{message:string}>("http://localhost:3000/api/boards/" + _id).subscribe((responseData)=>{
+  this.http.delete<{message:string}>("http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards/" + _id).subscribe((responseData)=>{
       console.log(responseData.message);
     });
     
 }
 
 newTask(col: Column) {
-        this.http.put<{message:string, postId:string}>('http://localhost:3000/api/boards',col)
+        this.http.put<{message:string, postId:string}>('http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards',col)
              .subscribe((responseData)=>{
             console.log(responseData.message);
 
@@ -42,24 +42,24 @@ newTask(col: Column) {
 editTask(taskNameToBeUpdated: any, colIdUserClickedOn: any) {
   console.log(taskNameToBeUpdated);
   
-  this.http.delete('http://localhost:3000/api/boards/edit/' + colIdUserClickedOn/taskNameToBeUpdated)
+  this.http.delete('http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards/edit/' + colIdUserClickedOn/taskNameToBeUpdated)
   .subscribe((responseData)=>{
     
   });
 }
 clearEveryThing() {
-  this.http.delete<{message:string}>("http://localhost:3000/api/boards/clearEveryThing/All/E").subscribe((responseData)=>{
+  this.http.delete<{message:string}>("http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards/clearEveryThing/All/E").subscribe((responseData)=>{
     console.log(responseData.message);
   })
 }
 deleteTask(taskId: any, colId: any, item:any) {
-  this.http.delete<{message:string}>("http://localhost:3000/api/boards/" + colId +"/"+item).subscribe((responseData)=>{
+  this.http.delete<{message:string}>("http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com0/api/boards/" + colId +"/"+item).subscribe((responseData)=>{
     console.log(responseData.message);
   });
 }
 
 getBoard(){
-  return this.http.get<{message:string, boards:any}>('http://localhost:3000/api/boards');
+  return this.http.get<{message:string, boards:any}>('http://nodeangular-env.eba-vtimkjvk.us-east-2.elasticbeanstalk.com/api/boards');
 }
 
 
